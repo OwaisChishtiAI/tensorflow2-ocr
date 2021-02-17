@@ -8,7 +8,7 @@ matplotlib.use("Agg")
 # import the necessary packages
 from pyimagesearch.models import ResNet
 from pyimagesearch.az_dataset import load_mnist_dataset
-from pyimagesearch.az_dataset import load_az_dataset
+from data_generator import load_pren_dataset
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import SGD
 from sklearn.preprocessing import LabelBinarizer
@@ -22,13 +22,19 @@ import cv2
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-a", "--az", required=True,
+ap.add_argument("-a", "--az",
 	help="path to A-Z dataset")
-ap.add_argument("-m", "--model", type=str, required=True,
+ap.add_argument("-m", "--model", type=str,
 	help="path to output trained handwriting recognition model")
 ap.add_argument("-p", "--plot", type=str, default="plot.png",
 	help="path to output training history file")
+ap.add_argument("-s", "--show", type=str, default=False,
+	help="select to show A-Z images.")
 args = vars(ap.parse_args())
+
+# if args["show"]:
+# 	show_az_dataset("a_z_handwritten_data.csv")
+# 	quit()
 
 # initialize the number of epochs to train for, initial learning rate,
 # and batch size
@@ -38,13 +44,13 @@ BS = 128
 
 # load the A-Z and MNIST datasets, respectively
 print("[INFO] loading datasets...")
-(azData, azLabels) = load_az_dataset(args["az"])
+(azData, azLabels) = load_pren_dataset()
 (digitsData, digitsLabels) = load_mnist_dataset()
 
 # the MNIST dataset occupies the labels 0-9, so let's add 10 to every
 # A-Z label to ensure the A-Z characters are not incorrectly labeled
 # as digits
-azLabels += 10
+# azLabels += 10
 
 # stack the A-Z data and labels with the MNIST digits data and labels
 data = np.vstack([azData, digitsData])
@@ -108,8 +114,8 @@ H = model.fit(
 	verbose=1)
 
 # define the list of label names
-labelNames = "0123456789"
-labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+labelNames = "0123456789N"
+# labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 labelNames = [l for l in labelNames]
 
 # evaluate the network

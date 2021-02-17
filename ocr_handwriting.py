@@ -93,8 +93,8 @@ chars = np.array([c[0] for c in chars], dtype="float32")
 preds = model.predict(chars)
 
 # define the list of label names
-labelNames = "0123456789"
-labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+labelNames = "0123456789N"
+# labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 labelNames = [l for l in labelNames]
 
 # loop over the predictions and bounding box locations together
